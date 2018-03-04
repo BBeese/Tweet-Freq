@@ -2,7 +2,6 @@ import tweepy
 from tweepy import OAuthHandler
 
 import matplotlib.pyplot as plt
-import numpy as np
 
 def StringCleaning(s):
     string = ""
@@ -12,8 +11,6 @@ def StringCleaning(s):
         else:
             string = string + char
     return string
-
-
 
 def main():
     
@@ -27,7 +24,9 @@ def main():
 
     api = tweepy.API(auth)
 
-    alltweets = api.user_timeline(screen_name = "@realdonaldtrump", count = 200, include_rts = False)
+    handle = str(input("Enter the user's twitter handle: @"))
+
+    alltweets = api.user_timeline(screen_name = handle, count = 200, include_rts = False)
 
     outtweets = [[tweet.text] for tweet in alltweets]
 
@@ -45,7 +44,7 @@ def main():
     wordList = []
     count = 0
     for key in wordDict:
-        if (wordDict[key] <= 7) or (key == "") or (len(key) <= 5):
+        if (wordDict[key] <= 6) or (key == "") or (len(key) <= 4): # Arbitrary word length/frequency constraints
             continue
         else:
             appender = [key]
@@ -58,19 +57,21 @@ def main():
     wordz = []
     valuez = []
     
-    for i in range (len(wordList)):
+    for i in range (len(wordList)): # Strips dictionary into two lists
             wordz.append(wordList[i][0])
             valuez.append(wordList[i][1])
 
-    print(wordz)
-    print(valuez)
+    x = range(len(wordz))
 
-    plt.bar(wordz, valuez)
-    plt.xticks(range(len(wordz)), wordz)
+    plt.figure(figsize=(10,5))
+    plt.style.use("seaborn-white")
+    plt.xticks(x, wordz, rotation="vertical", size=8, fontname="Arial")
+    plt.bar(x, valuez, color = "green", width = .25)
+    plt.title("@%s's Tweet Vocabulary" %handle, fontweight="bold", fontname="Arial")
+    plt.ylabel("Frequency",fontname="Arial")
+    plt.xlabel("Words")
     plt.show()
 
     #TWEEPY>CURSOR // JSON LIBRARY TO GET MORE THAN 200 TWEETS
-    #Why arent the y values plotting correctly!?!?!?!??!?!?
-    #Completely abandon what im trying to do, use dataframe in pandas or numpy
 
 main()
