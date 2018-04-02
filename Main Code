@@ -14,10 +14,10 @@ def StringCleaning(s):
 
 def main():
     
-    appKey = "E5SKwYA3Wv8YjGyeNPeJSGyED"
-    appSecret = "D300scxAWlRYfDYcsGBCGOFlfU9sTesljsyUoFgHU5gKy6TbuR"
-    authToken = "932043916009930752-PSAfM2M3A0wW2zmIy0Ypwp1tiavKwt5"
-    authSecret = "FCM7374gFpZwFuNoZb9qj32m7PuWiwXsc1skfF2YgURLf"
+    appKey = "redacted"
+    appSecret = "redacted"
+    authToken = "redacted"
+    authSecret = "redacted"
 
     auth = OAuthHandler(appKey, appSecret)
     auth.set_access_token(authToken, authSecret)
