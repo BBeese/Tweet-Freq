@@ -95,41 +95,59 @@ def count_words(tweets):
     return word_dict
 
 
-def main():
-    api = authenticate()
-    handle = str(input("Enter the user's twitter handle: @"))
-    raw_tweets = pull_tweets(api, handle)
-    word_dict = count_words(raw_tweets)
-
+def dict_to_2d(d, length):
+    """
+    :param d: dictionary
+    :param length: min length of words to include
+    :return: 2d list version of dictionary parameter
+    """
     word_list = []
     count = 0
-    for key in word_dict:
+    for key in d:
         # '4' is an arbitrary word length constraint
-        if (key == "") or (len(key) <= 4):
+        if (key == "") or (len(key) <= length):
             continue
         else:
             # Puts dictionary values into 2d List
             appender = [key]
             word_list.append(appender)
-            word_list[count].append(word_dict[key])
+            word_list[count].append(d[key])
             count += 1
 
     # Sorts by values
     word_list = sorted(word_list, key=lambda l: l[1], reverse=True)
 
+    return word_list
+
+
+def dict_strip(d):
+    """
+    :param d: dictionary to turn into 2d list
+    :return: 2 separate lists with corresponding word-value pairs
+    """
     words = []
     values = []
-
     # Strips dictionary into two lists
-    for i in range(len(word_list)):
-        words.append(word_list[i][0])
-        values.append(word_list[i][1])
+    for i in range(len(d)):
+        words.append(d[i][0])
+        values.append(d[i][1])
 
     if len(words) > 15:
         words = words[0:15]
         values = values[0:15]
 
-    graph(range(len(words)), words, values, handle)
+    return words, values
+
+
+def main():
+
+    api = authenticate()
+    handle = str(input("Enter the user's twitter handle: @"))
+    raw_tweets = pull_tweets(api, handle)
+    word_dict = count_words(raw_tweets)
+    word_2d_list = dict_to_2d(word_dict, 4)
+    words_payload, values_payload = dict_strip(word_2d_list)
+    graph(range(len(words_payload)), words_payload, values_payload, handle)
 
     # TODO: Handle @'s, Style the plot better
     # TODO: Unit Tests
