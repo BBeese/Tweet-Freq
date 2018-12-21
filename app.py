@@ -48,27 +48,27 @@ def graph(word_count, words, values, handle):
     :return:
     """
 
-    plt.figure(figsize=(7, 7))
     plt.style.use("seaborn-white")
-    plt.xticks(word_count, words, rotation="vertical", size=10, fontname="Arial")
-    plt.bar(word_count, values, color="green", width=.25)
+    plt.yticks(word_count, words, size=10, fontname="Arial")
+    plt.barh(word_count, values, color="green")
     plt.title("@%s's Tweet Vocabulary" % handle, fontweight="bold", fontname="Arial")
-    plt.ylabel("Frequency", fontname="Arial")
-    plt.xlabel("Words")
+    plt.xlabel("Frequency", fontname="Arial")
+    plt.ylabel("Words")
     plt.show()
 
     return
 
 
-def pull_tweets(api, handle):
+def pull_tweets(api, handle, items):
     """
     Gets a specified number of tweets from the Twitter user's account.
     :param api: Twitter verification object
     :param handle: String; A Twitter account's address
-    :return: List; The past 3000 Tweets from this userr
+    :param items: Int; Number of tweets to pull
+    :return: List; The past <items> Tweets from this user
     """
     tweets = []
-    for tweet in tweepy.Cursor(api.user_timeline, screen_name=handle).items(3000):
+    for tweet in tweepy.Cursor(api.user_timeline, screen_name=handle).items(items):
         # Make sure tweet isn't a retweet
         if tweet.text[0:2] != "RT":
             tweets.append(tweet.text)
@@ -143,7 +143,7 @@ def main():
 
     api = authenticate()
     handle = str(input("Enter the user's twitter handle: @"))
-    raw_tweets = pull_tweets(api, handle)
+    raw_tweets = pull_tweets(api, handle, 1000)
     word_dict = count_words(raw_tweets)
     word_2d_list = dict_to_2d(word_dict, 4)
     words_payload, values_payload = dict_strip(word_2d_list)
