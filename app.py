@@ -1,6 +1,5 @@
-import tweepy
 from tweepy import OAuthHandler
-
+import tweepy
 import matplotlib.pyplot as plt
 
 
@@ -23,7 +22,7 @@ def string_cleaning(s):
 def authenticate():
     """
     :return: Verified object
-    Authenticates credentials against Twitter's services.
+    Authenticates credentials to use Twitter's services.
     """
 
     app_key = "ikZS64uOU2yVSsvteK3PQqxLc"
@@ -78,7 +77,7 @@ def pull_tweets(api, handle, items):
 
 def count_words(tweets):
     """
-    Populates a dictionary with words from the tweets, counts the nuuber of instances of each word
+    Populates a dictionary with words from the tweets, counts the number of instances of each word
     :param tweets: List; list of each tweet from pull_tweets
     :return: dictionary with int values for each string key
     """
