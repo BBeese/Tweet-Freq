@@ -1,6 +1,7 @@
 from tweepy import OAuthHandler
 import tweepy
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 
 
 def string_cleaning(s):
@@ -47,13 +48,18 @@ def graph(word_count, words, values, handle):
     :return:
     """
 
-    plt.style.use("seaborn-white")
-    plt.yticks(word_count, words, size=10, fontname="Arial")
-    plt.barh(word_count, values, color="green")
-    plt.title("@%s's Tweet Vocabulary" % handle, fontweight="bold", fontname="Arial")
-    plt.xlabel("Frequency", fontname="Arial")
-    plt.ylabel("Words")
-    plt.show()
+    title = f"@{handle}s's Tweet Vocabulary"
+    fig = go.Figure(data=go.Bar(x=words, y=values))
+    fig.update_layout(title_text=title)
+    fig.show()
+
+    # plt.style.use("seaborn-white")
+    # plt.yticks(word_count, words, size=10, fontname="Arial")
+    # plt.barh(word_count, values, color="green")
+    # plt.title("@%s's Tweet Vocabulary" % handle, fontweight="bold", fontname="Arial")
+    # plt.xlabel("Frequency", fontname="Arial")
+    # plt.ylabel("Words")
+    # plt.show()
 
     return
 
@@ -142,7 +148,7 @@ def main():
 
     api = authenticate()
     handle = str(input("Enter the user's twitter handle: @"))
-    raw_tweets = pull_tweets(api, handle, 1000)
+    raw_tweets = pull_tweets(api, handle, 100)
     word_dict = count_words(raw_tweets)
     word_2d_list = dict_to_2d(word_dict, 4)
     words_payload, values_payload = dict_strip(word_2d_list)
@@ -152,6 +158,9 @@ def main():
     # TODO: Unit Tests
     # TODO: MAYBE: fill a list with common boring words?
     # TODO: MAYBE: Error handling (@ name doesn't exist, not enough tweets/words, etc)
+    # TODO: Python library 'Dash' for embedding graph into webpage
+    # TODO: Move data into a pandas dataframe, might be able to sort without all my functions,
+            # Will also have more access to customizability with my graph. 
 
 
 main()
