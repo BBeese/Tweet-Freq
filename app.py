@@ -2,6 +2,8 @@ from tweepy import OAuthHandler
 import tweepy
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+import plotly.express as px
+import pandas as pd
 
 
 def string_cleaning(s):
@@ -99,6 +101,26 @@ def count_words(tweets):
 
     return word_dict
 
+def count_words_TRIAL(tweets):
+    """
+    Populates a dictionary with words from the tweets, counts the number of instances of each word
+    :param tweets: List; list of each tweet from pull_tweets
+    :return: dictionary with int values for each string key
+    """
+    word_dict = {}
+    for tweets in tweets:
+        clean_tweets = tweets.lower().split()
+        for word in clean_tweets:
+            w = string_cleaning(word)
+            if w in word_dict:
+                word_dict[w] += 1
+            else:
+                word_dict[w] = 1
+    
+    # pd.Series(word_dict).to_frame()
+    df_word_dict = pd.DataFrame.from_dict(word_dict, orient = 'index', columns=['Count'])
+    return df_word_dict
+
 
 def dict_to_2d(d, length):
     """
@@ -144,11 +166,23 @@ def dict_strip(d):
     return words, values
 
 
+def pandas_method(word_dictionary):
+    display_words = word_dictionary.nlargest(10, "Count")
+    display_words['Word'] = display_words.index
+    fig = px.bar(display_words, x="Word", y='Count')
+    fig.show()
+
+    #Can either:
+    #Use existing method (dict_to_2d), modify it to remove key from dictionary if length too short
+    #OR do dataframe manipulation. 
+    # **** W I P ****
+
 def main():
 
     api = authenticate()
     handle = str(input("Enter the user's twitter handle: @"))
     raw_tweets = pull_tweets(api, handle, 100)
+    #word_dict = count_words_TRIAL(raw_tweets)
     word_dict = count_words(raw_tweets)
     word_2d_list = dict_to_2d(word_dict, 4)
     words_payload, values_payload = dict_strip(word_2d_list)
